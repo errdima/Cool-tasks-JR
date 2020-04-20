@@ -1,0 +1,207 @@
+package com.javarush.task.task20.task2025;
+
+import java.util.*;
+
+/*
+Алгоритмы-числа
+*/
+public class Solution {
+
+    public static long[] getNumbers(long N) {
+        Set<Long> numbers = new TreeSet<>();
+        Set<Long> res = new TreeSet<>();
+
+        for (long i = 1; i<N; i++){
+            long temp = i;
+            long temp2 = i;
+            int digits = 0;
+            while (temp>0){
+                ++digits;
+                temp /=10;
+            }
+            int[] dig = new int[digits];
+            for (int j = 0;j<dig.length; j++){
+                dig[j] = (int)temp2%10;
+                temp2 /=10;
+            }
+            Arrays.sort(dig);
+            StringBuilder sb = new StringBuilder();
+            for (int d:dig){
+                sb.append(d);
+            }
+            numbers.add(Long.parseLong(sb.toString()));
+            sb.append(0);
+            numbers.add(Long.parseLong(sb.toString()));
+           sb.append(0);
+           numbers.add(Long.parseLong(sb.toString()));
+        }
+        for (Long i:numbers){
+            Long armstrong = armstrong(i);
+            if (armstrong == armstrong(armstrong)) res.add(armstrong);
+        }
+
+        long[] result = new long[res.size()];
+        int k = 0;
+        for (Long i:res){
+            result[k++] = i;
+        }
+        return result;
+    }
+
+    public static long armstrong(long a){
+        long temp = a;
+        long temp2 = a;
+        int digits = 0;
+        while (temp>0){
+            ++digits;
+            temp /=10;
+        }
+        int[] dig = new int[digits];
+        for (int j = 0;j<dig.length; j++){
+            dig[j] = (int)temp2%10;
+            temp2 /=10;
+        }
+        long res = 0;
+        for (int i = 0; i<dig.length;i++){
+            res = res + pow(dig[i],digits);
+        }
+        return res;
+    }
+
+    public static long pow (long i,int digits){
+
+        int result = 1;
+        for (int j = 0; j < digits; j++) {
+            result *= i;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        long[] nums = getNumbers(10000000L);
+        for(long i:nums){
+            System.out.println(i);
+        }
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------
+
+package com.javarush.task.task20.task2025;
+
+import java.util.*;
+
+/*
+Алгоритмы-числа
+*/
+public class Solution {
+    static TreeSet<Long> numbers = new TreeSet<>();
+
+    public static long[] getNumbers(long N) {
+        Set<Long> res = new TreeSet<>();
+        long i = 1L;
+        generateNumber(i, N);
+
+        while (i<N) {
+            i = numbers.last();
+            generateNumber(i+1,N);
+
+        }
+
+        for (Long tmp:numbers){
+            if (tmp == armstrong(tmp)) res.add(i);
+        }
+
+        long[] result = new long[res.size()];
+        int k = 0;
+        for (Long r:res){
+            result[k++] = r;
+        }
+        return result;
+    }
+    public static void generateNumber(long i, long N){
+
+        if (i > 0 && i < N) {
+            long temp = i;
+            long temp2 = i;
+            int digits = 0;
+            while (temp>0){
+                ++digits;
+                temp /=10;
+            }
+            int[] dig = new int[digits];
+            for (int j = dig.length-1;j>=0; j--){
+                dig[j] = (int)temp2%10;
+                temp2 /=10;
+            }
+            int last = dig[dig.length-1];
+            Arrays.sort(dig);
+
+            StringBuilder sb = new StringBuilder();
+            for (int d:dig){
+                sb.append(d);
+                if (last==0) sb.append(0);
+            }
+            numbers.add(Long.parseLong(sb.toString()));
+//            sb.append(0);
+//            numbers.add(Long.parseLong(sb.toString()));
+//            sb.append(0);
+//            numbers.add(Long.parseLong(sb.toString()));
+        }
+    }
+
+    public static long armstrong(long a){
+        long temp = a;
+        long temp2 = a;
+        int digits = 0;
+        while (temp>0){
+            ++digits;
+            temp /=10;
+        }
+        int[] dig = new int[digits];
+        for (int j = 0;j<dig.length; j++){
+            dig[j] = (int)temp2%10;
+            temp2 /=10;
+        }
+        long res = 0;
+        for (int i = 0; i<dig.length;i++){
+            res = res + pow(dig[i],digits);
+        }
+        return res;
+    }
+
+    public static long pow (long i,int digits){
+
+        int result = 1;
+        for (int j = 0; j < digits; j++) {
+            result *= i;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Long t0 = System.currentTimeMillis();
+        //long n = Long.MAX_VALUE; //9.62
+        //int n = 2147483647;//22.338 - 24.887
+        long[] lst = getNumbers(9999L);
+        Long t1 = System.currentTimeMillis();
+        System.out.println("time: " + (t1 - t0) / 1000d + " sec");
+        System.out.println("memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024) + " mb");
+        for (int i = 0; i < lst.length; i++) {
+            System.out.print(lst[i] + ", ");
+        }
+        System.out.println();
+
+    }
+}
+
+/*
+1, 2, 3, 4, 5, 6, 7, 8, 9, 153, 370, 371, 407, 1634, 8208, 9474, 54748,
+92727, 93084, 548834, 1741725, 4210818, 9800817, 9926315,
+24678050, 24678051, 88593477, 146511208, 472335975, 534494836,
+912985153, 4679307774L, 32164049650L, 32164049651L, 40028394225L,
+42678290603L, 44708635679L, 49388550606L, 82693916578L,
+94204591914L, 28116440335967L, 4338281769391370L, 4338281769391371L,
+21897142587612075L, 35641594208964132L, 35875699062250035L,
+1517841543307505039L, 3289582984443187032L, 498128791164624869L, 4929273885928088826L
+ */

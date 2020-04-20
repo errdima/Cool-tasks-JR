@@ -1,0 +1,39 @@
+package com.javarush.task.task34.task3411;
+
+/* 
+Ханойские башни
+*/
+
+
+import java.util.Stack;
+
+public class Solution {
+    public static void main(String[] args) {
+        //int numRings = 4;
+        Stack<Integer> from = new Stack<>();
+        Stack<Integer> help = new Stack<>();
+        Stack<Integer> to = new Stack<>();
+        from.push(1);
+        from.push(2);
+        from.push(3);
+        from.push(4);
+        System.out.println(from);
+        moveRing(from, help, to, from.size());
+        System.out.println(to);
+    }
+
+    public static void moveRing(Stack<Integer> from, Stack<Integer> help, Stack<Integer> to, int numRings) {
+//        if(numRings>0) {
+//            moveRing(a, c, b,numRings-1);
+//            System.out.println("from " + a + " to " + b);
+//            moveRing(c, b, a,numRings-1);
+//        }
+        if(numRings>0) {
+            moveRing(from, to, help, numRings-1);
+            int bigger = from.pop();
+            to.push(bigger);
+            System.out.println(to);
+            moveRing(help, from, to, numRings-1);
+        }
+    }
+}
